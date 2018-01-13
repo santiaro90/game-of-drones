@@ -1,8 +1,6 @@
 {
   "name": "game-of-drones-api",
   "version": "1.0.0",
-  "main": "index.js",
-  "keywords": [],
   "author": "Santiago Alvarez Rodriguez <santiaro90@gmail.com>",
   "dependencies": {
     "body-parser": "^1.18.2",

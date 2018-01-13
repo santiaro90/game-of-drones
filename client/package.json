@@ -1,0 +1,27 @@
+{
+  "name": "game-of-drones-app",
+  "version": "1.0.0",
+  "author": "Santiago Alvarez Rodriguez <santiaro90@gmail.com>",
+  "dependencies": {
+    "react": "^16.2.0",
+    "react-dom": "^16.2.0",
+    "react-redux": "^5.0.6",
+    "react-router": "^4.2.0",
+    "react-router-dom": "^4.2.2",
+    "react-scripts": "1.0.17",
+    "redux": "^3.7.2",
+    "semantic-ui-css": "^2.2.12",
+    "semantic-ui-react": "^0.77.2"
+  },
+  "scripts": {
+    "build": "react-scripts build",
+    "flow": "flow",
+    "flow-typed": "flow-typed",
+    "start": "react-scripts start",
+    "test": "react-scripts test --env=jsdom"
+  },
+  "devDependencies": {
+    "flow-bin": "^0.63.1",
+    "flow-typed": "^2.2.3"
+  }
+}
