@@ -11,5 +11,13 @@ if (!config.IS_PROD) {
 }
 
 module.exports = Object.assign(config, {
-  PORT: process.env.PORT
+  cors: {
+    ALLOW_ORIGIN: process.env.ALLOW_ORIGIN
+  },
+  logger: {
+    LOG_FORMAT: process.env.REQUEST_LOG_FORMAT
+  },
+  server: {
+    PORT: process.env.PORT
+  }
 })

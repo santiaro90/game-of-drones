@@ -1,14 +1,11 @@
 const express = require('express')
 
 const config = require('./config')
+const middleware = require('./middleware')
 
 const app = express()
 
-app.use('/ping', (req, res) => {
-  res.write('pong\n')
-  res.status(200)
+middleware.init(app)
 
-  res.end()
-})
-
-app.listen(config.PORT, () => console.log(`Started listening on port ${config.PORT}`))
+app.use('/ping', (req, res) => res.status(200).json({ message: 'pong' }))
+app.listen(config.server.PORT, () => console.log(`Started listening on port ${config.server.PORT}`))
