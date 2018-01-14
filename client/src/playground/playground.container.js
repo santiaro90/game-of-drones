@@ -1,8 +1,10 @@
 // @flow
 import React, { Component } from 'react'
-import { Button, Container, Header } from 'semantic-ui-react'
+import { Container } from 'semantic-ui-react'
 import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
+
+import PlayersForm from './players-form/players-form.component'
 
 import { type StoreState } from '../store'
 
@@ -17,16 +19,27 @@ type PlayGroundProps = {
 }
 
 class PlayGround extends Component<PlayGroundProps> {
-  componentDidMount() {
-    this.props.initGame()
+  startGame = (players) => {
+    this.props.initGame(players)
+  }
+
+  renderPlayersRegistrationForm = () => {
+    const { started } = this.props.game
+    return started ? null : <PlayersForm onStart={this.startGame} />
+  }
+
+  renderPlayGround = () => {
+    const { started } = this.props.game
+    return started ? <h1>Playground</h1> : null
   }
 
   render() {
     return (
-      <Container textAlign="center">
-        <Header as="h2" textAlign="center">Playground</Header>
+      <Container textAlign="center" text>
+        {this.renderPlayersRegistrationForm()}
+        {this.renderPlayGround()}
 
-        <Button as={Link} to="/" primary>Go back</Button>
+        <Link to="/">Go home</Link>
       </Container>
     )
   }
@@ -40,7 +53,7 @@ const mapStateToProps = (state: StoreState) => ({
 })
 
 const mapDispatchToProps = (dispatch: *) => ({
-  initGame: () => dispatch(initGame())
+  initGame: (players) => dispatch(initGame(players))
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(PlayGround)

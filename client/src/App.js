@@ -14,7 +14,7 @@ class App extends Component<{}> {
 
         <Switch>
           <Route path="/" exact={true} component={Home} />
-          <Route path="/play" exact={true} component={PlayGround} />
+          <Route path="/playground" exact={true} component={PlayGround} />
         </Switch>
       </div>
     )

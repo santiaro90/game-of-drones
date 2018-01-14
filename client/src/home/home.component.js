@@ -28,7 +28,7 @@ class Home extends Component<{}> {
           </p>
         </Container>
 
-        <Button as={Link} to="/play" primary>Play now!</Button>
+        <Button as={Link} to="/playground" primary>Play now!</Button>
       </Container>
     )
   }
