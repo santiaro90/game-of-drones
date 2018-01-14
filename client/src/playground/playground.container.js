@@ -7,13 +7,15 @@ import { connect } from 'react-redux'
 import { type StoreState } from '../store'
 
 import PlayersForm from './players-form/players-form.component'
+import Score from './score/score.component'
 import ShapeSelection from './shape-selection/shape-selection.component'
 
 import { initGame } from '../store/actions/game.actions'
 import { selectShapeForPlayer } from '../store/actions/rounds.actions'
 
-type PlayerProp = { id?: string, name: string }
+type PlayerProp = { id?: string, name: string, roundsWon?: number }
 type ShapeProp = { kind: string }
+type RoundProp = { roundNumber: number, winner: string }
 type PlayGroundProps = {
   initGame: (players: PlayerProp[]) => void,
   selectShape: (round: number, currentPlayer: PlayerProp, shape: ShapeProp) => void,
@@ -25,7 +27,8 @@ type PlayGroundProps = {
     round: number,
     started: boolean
   },
-  shapes: ShapeProp[]
+  shapes: ShapeProp[],
+  rounds: RoundProp[]
 }
 
 class PlayGround extends Component<PlayGroundProps> {
@@ -59,6 +62,10 @@ class PlayGround extends Component<PlayGroundProps> {
 
   renderPlayGround = () => {
     const { started, players } = this.props.game
+    const rounds = this.props.rounds.map((round) => {
+      const winner = players.all.find(p => p.id === round.winner) || null
+      return { ...round, winner: winner ? winner.name : round.winner }
+    })
 
     return !started ? null : ([
         <Grid.Column width={8} key="playground-selection">
@@ -69,7 +76,7 @@ class PlayGround extends Component<PlayGroundProps> {
             onShapeSelected={this.selectShape} />
         </Grid.Column>,
         <Grid.Column width={4} key="playground-results">
-          <h2>Random shit</h2>
+          <Score players={players.all} rounds={rounds} />
         </Grid.Column>
     ])
   }
@@ -102,7 +109,8 @@ const mapStateToProps = (state: StoreState) => ({
     round: state.game.currentRound,
     started: state.game.started
   },
-  shapes: state.rules.map(({ kind }) => ({ kind }))
+  shapes: state.rules.map(({ kind }) => ({ kind })),
+  rounds: state.rounds.map(({ roundNumber, winner }) => ({ roundNumber, winner }))
 })
 
 const mapDispatchToProps = (dispatch: Function) => ({

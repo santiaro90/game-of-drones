@@ -47,7 +47,7 @@ const getRoundWinner = (rules, round, players) => {
   if (ruleToCompare.beats === player2Selection) {
     return player1.id
   } else if (ruleToCompare.kind === player2Selection) {
-    return ''
+    return 'tied'
   } else {
     return player2.id
   }
