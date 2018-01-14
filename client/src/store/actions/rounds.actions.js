@@ -36,10 +36,34 @@ const selectShape = (
     payload: { currentRound, player, shape }
 })
 
-const finishRound = (currentRound: number): FinishRoundAction => ({
+const getRoundWinner = (rules, round, players) => {
+  const [player1, player2] = players
+
+  const player1Selection = round.shapeSelections[player1.id]
+  const player2Selection = round.shapeSelections[player2.id]
+
+  const ruleToCompare = rules.find(r => r.kind === player1Selection)
+
+  if (ruleToCompare.beats === player2Selection) {
+    return player1.id
+  } else if (ruleToCompare.kind === player2Selection) {
+    return ''
+  } else {
+    return player2.id
+  }
+}
+
+const onFinishRound = (currentRound, winner) => ({
   type: actionTypes.ROUND_FINISH,
-  payload: { currentRound, winner: 'tie' }
+  payload: { currentRound, winner }
 })
+
+const finishRound = (currentRound: number) => (dispatch: Function, getState: Function) => {
+  const { rules, rounds, game } = getState()
+  const winner = getRoundWinner(rules, rounds[currentRound - 1], game.players.all)
+
+  dispatch(onFinishRound(currentRound, winner))
+}
 
 export const selectShapeForPlayer = (
   currentRound: number,

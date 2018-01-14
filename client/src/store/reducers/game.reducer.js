@@ -1,7 +1,8 @@
 // @flow
 import {
   actionTypes as gameActionTypes,
-  type GameAction
+  type GameAction,
+  type PlayerPayload
 } from '../actions/game.actions'
 
 import {
@@ -9,16 +10,11 @@ import {
   type RoundAction
 } from '../actions/rounds.actions'
 
-type Player = {
-  id?: string,
-  name: string
-}
-
 export type Game = {
   players: {
-    current?: Player,
-    next?: Player,
-    all: Player[]
+    current?: PlayerPayload,
+    next?: PlayerPayload,
+    all: PlayerPayload[]
   },
   currentRound: number,
   started: boolean
@@ -35,7 +31,7 @@ const initialState: Game = {
 export default (state: Game = initialState, action: GameAction | RoundAction): Game => {
   switch (action.type) {
     case gameActionTypes.GAME_INIT: {
-      const { players } = action.payload
+      const players: Player[] = action.payload.players
 
       return {
         started: true,
@@ -67,11 +63,18 @@ export default (state: Game = initialState, action: GameAction | RoundAction): G
     }
 
     case roundActionTypes.ROUND_FINISH: {
+      const { winner } = action.payload
+
+      const increaseWonCount = (player) => {
+        const won = player.id === winner
+        return won ? ({ ...player, roundsWon: player.roundsWon + 1 }) : player
+      }
+
       return {
         ...state,
         currentRound: action.payload.currentRound + 1,
         players: {
-          ...state.players,
+          all: state.players.all.map(increaseWonCount),
           current: state.players.all[0],
           next: state.players.all[1]
         }
