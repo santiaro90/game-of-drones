@@ -1,7 +1,7 @@
 // @flow
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
-import { Grid } from 'semantic-ui-react'
+import { Header, Grid } from 'semantic-ui-react'
 import { connect } from 'react-redux'
 
 import { type StoreState } from '../store'
@@ -9,13 +9,14 @@ import { type StoreState } from '../store'
 import PlayersForm from './players-form/players-form.component'
 import ShapeSelection from './shape-selection/shape-selection.component'
 
-import { initGame, selectShapeForPlayer } from '../store/actions/game.actions'
+import { initGame } from '../store/actions/game.actions'
+import { selectShapeForPlayer } from '../store/actions/rounds.actions'
 
 type PlayerProp = { id?: string, name: string }
 type ShapeProp = { kind: string }
 type PlayGroundProps = {
   initGame: (players: PlayerProp[]) => void,
-  selectShape: (currentPlayer: PlayerProp, shape: ShapeProp) => void,
+  selectShape: (round: number, currentPlayer: PlayerProp, shape: ShapeProp) => void,
   game: {
     players: {
       all: PlayerProp[],
@@ -33,8 +34,17 @@ class PlayGround extends Component<PlayGroundProps> {
   }
 
   selectShape = (shape: ShapeProp) => {
-    const { current } = this.props.game.players
-    this.props.selectShape(current, shape)
+    const { players, round } = this.props.game
+    this.props.selectShape(round, players.current, shape)
+  }
+
+  renderCurrentRound = () => {
+    const { started, round } = this.props.game
+    return started ?
+      <Header>
+        <Header.Subheader>Round {round}</Header.Subheader>
+      </Header> :
+      null
   }
 
   renderPlayersRegistrationForm = () => {
@@ -70,6 +80,9 @@ class PlayGround extends Component<PlayGroundProps> {
 
     return (
       <Grid columns={columns} divided>
+        <Grid.Row centered>
+          {this.renderCurrentRound()}
+        </Grid.Row>
         <Grid.Row centered stretched>
           {this.renderPlayersRegistrationForm()}
           {this.renderPlayGround()}
@@ -92,9 +105,9 @@ const mapStateToProps = (state: StoreState) => ({
   shapes: state.rules.map(({ kind }) => ({ kind }))
 })
 
-const mapDispatchToProps = (dispatch: *) => ({
+const mapDispatchToProps = (dispatch: Function) => ({
   initGame: (players) => dispatch(initGame(players)),
-  selectShape: (player, shape) => dispatch(selectShapeForPlayer(player, shape)),
+  selectShape: (round, player, shape) => dispatch(selectShapeForPlayer(round, player, shape)),
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(PlayGround)
