@@ -29,16 +29,16 @@ const initialState: Game = {
   }
 }
 
-export default (state: Game = initialState, { type, payload }: GameAction): Game => {
-  switch (type) {
+export default (state: Game = initialState, action: GameAction): Game => {
+  switch (action.type) {
     case gameActionTypes.INIT_GAME:
       return {
         started: true,
         currentRound: 1,
         players: {
-          all: payload.players,
-          current: payload.players[0],
-          next: payload.players[1]
+          all: action.payload.players,
+          current: action.payload.players[0],
+          next: action.payload.players[1]
         }
       }
     default:

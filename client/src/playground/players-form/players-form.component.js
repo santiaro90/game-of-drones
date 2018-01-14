@@ -8,7 +8,7 @@ import {
 } from 'semantic-ui-react'
 
 type FormProps = {
-  onStart: ({ name: string }[]) => void
+  onStart: ({ id?: string, name: string }[]) => void
 }
 
 type FormState = {

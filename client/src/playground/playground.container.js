@@ -9,24 +9,32 @@ import { type StoreState } from '../store'
 import PlayersForm from './players-form/players-form.component'
 import ShapeSelection from './shape-selection/shape-selection.component'
 
-import { initGame } from '../store/actions/game.actions'
+import { initGame, selectShapeForPlayer } from '../store/actions/game.actions'
 
+type PlayerProp = { id?: string, name: string }
+type ShapeProp = { kind: string }
 type PlayGroundProps = {
-  initGame: *,
+  initGame: (players: PlayerProp[]) => void,
+  selectShape: (currentPlayer: PlayerProp, shape: ShapeProp) => void,
   game: {
     players: {
-      all: { id?: string, name: string }[],
-      current: { id?: string, name: string }
+      all: PlayerProp[],
+      current: PlayerProp
     },
     round: number,
     started: boolean
   },
-  shapes: { kind: string }[]
+  shapes: ShapeProp[]
 }
 
 class PlayGround extends Component<PlayGroundProps> {
-  startGame = (players) => {
+  startGame = (players: PlayerProp[]) => {
     this.props.initGame(players)
+  }
+
+  selectShape = (shape: ShapeProp) => {
+    const { current } = this.props.game.players
+    this.props.selectShape(current, shape)
   }
 
   renderPlayersRegistrationForm = () => {
@@ -48,7 +56,7 @@ class PlayGround extends Component<PlayGroundProps> {
             key={players.current.id}
             player={players.current.name}
             options={this.props.shapes}
-            onShapeSelected={(s) => console.log(s)} />
+            onShapeSelected={this.selectShape} />
         </Grid.Column>,
         <Grid.Column width={4} key="playground-results">
           <h2>Random shit</h2>
@@ -85,7 +93,8 @@ const mapStateToProps = (state: StoreState) => ({
 })
 
 const mapDispatchToProps = (dispatch: *) => ({
-  initGame: (players) => dispatch(initGame(players))
+  initGame: (players) => dispatch(initGame(players)),
+  selectShape: (player, shape) => dispatch(selectShapeForPlayer(player, shape)),
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(PlayGround)
