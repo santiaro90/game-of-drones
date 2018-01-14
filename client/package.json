@@ -21,7 +21,9 @@
     "test": "react-scripts test --env=jsdom"
   },
   "devDependencies": {
+    "eslint-plugin-flowtype": "^2.41.0",
     "flow-bin": "^0.63.1",
-    "flow-typed": "^2.2.3"
+    "flow-typed": "^2.2.3",
+    "redux-logger": "^3.0.6"
   }
 }
