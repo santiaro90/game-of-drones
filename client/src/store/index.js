@@ -1,10 +1,17 @@
 // @flow
-import { Middleware, Store, applyMiddleware, createStore } from 'redux'
+import {
+  applyMiddleware,
+  createStore,
+  type Middleware,
+  type Store
+} from 'redux'
 import logger from 'redux-logger'
 
 import rootReducer, { type AppState } from './rootReducer'
 
-export default function configureStore(): Store<AppState> {
+export type StoreState = AppState
+
+export default function configureStore(): Store<StoreState> {
     const middleware: Middleware[] = []
 
     if (process.env.NODE_ENV === 'development') {
