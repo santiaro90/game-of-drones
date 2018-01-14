@@ -1,24 +1,44 @@
 // @flow
 import React, { Component } from 'react'
 import { Route, Switch } from 'react-router-dom'
-import { Header } from 'semantic-ui-react'
+import { Container, Header } from 'semantic-ui-react'
+import { connect } from 'react-redux'
+
+import { type StoreState } from './store'
 
 import Home from './home/home.component'
 import PlayGround from './playground/playground.container'
 
-class App extends Component<{}> {
+type AppProps = {
+  gameStarted: boolean,
+  currentRound: number
+}
+
+class App extends Component<AppProps> {
+  renderCurrentRound = () => this.props.gameStarted ?
+    <Header.Subheader>Round {this.props.currentRound}</Header.Subheader> :
+    null
+
   render() {
     return (
-      <div id="app">
-        <Header as="h1" textAlign="center">Game of Drones</Header>
+      <Container text>
+      <Header as="h1" textAlign="center">
+        Game of Drones
+        {this.renderCurrentRound()}
+      </Header>
 
         <Switch>
           <Route path="/" exact={true} component={Home} />
           <Route path="/playground" exact={true} component={PlayGround} />
         </Switch>
-      </div>
+      </Container>
     )
   }
 }
 
-export default App;
+const mapStateToProps = (state: StoreState): AppProps => ({
+  gameStarted: state.game.started,
+  currentRound: state.game.currentRound
+})
+
+export default connect(mapStateToProps)(App);

@@ -4,34 +4,43 @@ import {
   type GameAction
 } from '../actions/game.actions'
 
-type Rule = {
-  kind: string,
-  beats: string
-}
-
 type Player = {
-  id: ?string,
+  id?: string,
   name: string
 }
 
 export type Game = {
-  players: Player[],
+  players: {
+    current?: Player,
+    next?: Player,
+    all: Player[]
+  },
   currentRound: number,
-  rules: Rule[],
   started: boolean
 }
 
 const initialState: Game = {
-  players: [],
   currentRound: 1,
-  rules: [],
-  started: false
+  started: true,
+  players: {
+    all: [{ id: '1', name: 'santiago' }, { id: '2', name: 'geral' }],
+    current: { id: '1', name: 'santiago' },
+    next: { id: '2', name: 'geral' },
+  }
 }
 
-export default (state: Game = initialState, { type, payload }: GameAction) => {
+export default (state: Game = initialState, { type, payload }: GameAction): Game => {
   switch (type) {
     case gameActionTypes.INIT_GAME:
-      return { ...state, players: payload.players, started: true }
+      return {
+        started: true,
+        currentRound: 1,
+        players: {
+          all: payload.players,
+          current: payload.players[0],
+          next: payload.players[1]
+        }
+      }
     default:
       return state
   }
