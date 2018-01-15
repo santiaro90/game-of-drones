@@ -17,7 +17,7 @@ const renderShapes = (shapes, onSelected) => (
 )
 
 const ShapeSelection = (props: ShapeSelectionProps) => (
-  <Container className="shape-selector" textAlign="center">
+  <Container textAlign="center">
     <Header as="h2">It's your turn {props.player}</Header>
     {renderShapes(props.options, props.onShapeSelected)}
   </Container>

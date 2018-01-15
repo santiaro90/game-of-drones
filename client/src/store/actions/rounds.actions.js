@@ -1,5 +1,5 @@
 // @flow
-import { type PlayerPayload } from './game.actions'
+import { detectGameWinner, type PlayerPayload } from './game.actions'
 
 type SelectShapeAction = {
   type: 'ROUND_SELECT_SHAPE',
@@ -42,7 +42,7 @@ const getRoundWinner = (rules, round, players) => {
   const player1Selection = round.shapeSelections[player1.id]
   const player2Selection = round.shapeSelections[player2.id]
 
-  const ruleToCompare = rules.find(r => r.kind === player1Selection)
+  const ruleToCompare = rules.shapes.find(r => r.kind === player1Selection)
 
   if (ruleToCompare.beats === player2Selection) {
     return player1.id
@@ -63,6 +63,7 @@ const finishRound = (currentRound: number) => (dispatch: Function, getState: Fun
   const winner = getRoundWinner(rules, rounds[currentRound - 1], game.players.all)
 
   dispatch(onFinishRound(currentRound, winner))
+  dispatch(detectGameWinner())
 }
 
 export const selectShapeForPlayer = (

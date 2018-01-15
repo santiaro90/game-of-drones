@@ -15,7 +15,6 @@ const colors = {
 
 const Shape = (props: ShapeProps) => (
   <Icon
-    className="shape-selector__shape"
     color={colors[props.kind]}
     name={`hand ${props.kind}`}
     size="huge"

@@ -14,15 +14,18 @@ export type Game = {
   players: {
     current?: PlayerPayload,
     next?: PlayerPayload,
-    all: PlayerPayload[]
+    all: PlayerPayload[],
+    winner?: PlayerPayload
   },
   currentRound: number,
-  started: boolean
+  started: boolean,
+  finished: boolean
 }
 
 const initialState: Game = {
   currentRound: 1,
   started: false,
+  finished: false,
   players: {
     all: []
   }
@@ -35,6 +38,7 @@ export default (state: Game = initialState, action: GameAction | RoundAction): G
 
       return {
         started: true,
+        finished: false,
         currentRound: 1,
         players: {
           all: players,
@@ -46,6 +50,17 @@ export default (state: Game = initialState, action: GameAction | RoundAction): G
 
     case gameActionTypes.GAME_RESET: {
       return { ...initialState }
+    }
+
+    case gameActionTypes.GAME_FINISH: {
+      return {
+        ...state,
+        finished: true,
+        players: {
+          ...state.players,
+          winner: action.payload.winner
+        }
+      }
     }
 
     case roundActionTypes.ROUND_SELECT_SHAPE: {

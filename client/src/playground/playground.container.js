@@ -1,6 +1,6 @@
 // @flow
 import React, { Component } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, Redirect } from 'react-router-dom'
 import { Header, Grid } from 'semantic-ui-react'
 import { connect } from 'react-redux'
 
@@ -25,7 +25,8 @@ type PlayGroundProps = {
       current: PlayerProp
     },
     round: number,
-    started: boolean
+    started: boolean,
+    finished: boolean
   },
   shapes: ShapeProp[],
   rounds: RoundProp[]
@@ -42,8 +43,8 @@ class PlayGround extends Component<PlayGroundProps> {
   }
 
   renderCurrentRound = () => {
-    const { started, round } = this.props.game
-    return started ?
+    const { started, finished, round } = this.props.game
+    return started && !finished ?
       <Header>
         <Header.Subheader>Round {round}</Header.Subheader>
       </Header> :
@@ -60,32 +61,46 @@ class PlayGround extends Component<PlayGroundProps> {
     )
   }
 
-  renderPlayGround = () => {
-    const { started, players } = this.props.game
-    const rounds = this.props.rounds.map((round) => {
-      const winner = players.all.find(p => p.id === round.winner) || null
+  renderScore = () => {
+    const { game, rounds } = this.props
+    const roundsWithWinner = rounds.map((round) => {
+      const winner = game.players.all.find(p => p.id === round.winner) || null
       return { ...round, winner: winner ? winner.name : round.winner }
     })
 
-    return !started ? null : ([
-        <Grid.Column width={8} key="playground-selection">
-          <ShapeSelection
-            key={players.current.id}
-            player={players.current.name}
-            options={this.props.shapes}
-            onShapeSelected={this.selectShape} />
-        </Grid.Column>,
-        <Grid.Column width={4} key="playground-results">
-          <Score players={players.all} rounds={rounds} />
-        </Grid.Column>
-    ])
+    return (
+      <Grid.Column width={4} key="playground-results">
+        <Score players={game.players.all} rounds={roundsWithWinner} />
+      </Grid.Column>
+    )
+  }
+
+  renderShapeSelector = () => {
+    const { game, shapes } = this.props
+
+    return (
+      <Grid.Column width={8} key="playground-selection">
+        <ShapeSelection
+          key={game.players.current.id}
+          player={game.players.current.name}
+          options={shapes}
+          onShapeSelected={this.selectShape} />
+      </Grid.Column>
+    )
+  }
+
+  renderPlayGround = () => {
+    const { started } = this.props.game
+    return !started ? null : [this.renderShapeSelector(), this.renderScore()]
   }
 
   render() {
-    const { started } = this.props.game
+    const { started, finished } = this.props.game
     const columns = started ? 2 : 1
 
-    return (
+    return finished ? (
+      <Redirect to="/winner" />
+    ) : (
       <Grid columns={columns} divided>
         <Grid.Row centered>
           {this.renderCurrentRound()}
@@ -107,9 +122,10 @@ const mapStateToProps = (state: StoreState) => ({
   game: {
     players: state.game.players,
     round: state.game.currentRound,
-    started: state.game.started
+    started: state.game.started,
+    finished: state.game.finished
   },
-  shapes: state.rules.map(({ kind }) => ({ kind })),
+  shapes: state.rules.shapes.map(({ kind }) => ({ kind })),
   rounds: state.rounds.map(({ roundNumber, winner }) => ({ roundNumber, winner }))
 })
 
