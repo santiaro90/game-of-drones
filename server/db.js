@@ -2,10 +2,9 @@ const mongoose = require('mongoose')
 
 const config = require('./config')
 
-const DB_URI = `${config.db.URL}:${config.db.PORT}/${config.db.NAME}`
-
-module.exports = () => {
-  const connection = mongoose.connect(DB_URI)
+const init = () => {
+  const MONGODB_URI = `${config.db.URL}:${config.db.PORT}/${config.db.NAME}`
+  const connection = mongoose.connect(MONGODB_URI, { useMongoClient: true })
 
   if (config.IS_DEV) {
     mongoose.set('debug', true)
@@ -13,3 +12,5 @@ module.exports = () => {
 
   return connection
 }
+
+module.exports = { init }
