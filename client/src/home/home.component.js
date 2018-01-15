@@ -4,15 +4,18 @@ import { Link } from 'react-router-dom'
 import { Button, Container, Header } from 'semantic-ui-react'
 import { connect } from 'react-redux'
 
+import { loadRules } from '../store/actions/rules.actions'
 import { resetGame } from '../store/actions/game.actions'
 
 type HomeProps = {
-  resetGame: () => void
+  resetGame: () => void,
+  loadRules: () => void
 }
 
 class Home extends Component<HomeProps> {
   componentWillMount() {
     this.props.resetGame()
+    this.props.loadRules()
   }
 
   render() {
@@ -46,7 +49,8 @@ class Home extends Component<HomeProps> {
 }
 
 const mapDispatchToProps = (dispatch: Function) => ({
-  resetGame: () => dispatch(resetGame())
+  resetGame: () => dispatch(resetGame()),
+  loadRules: () => dispatch(loadRules())
 })
 
 export default connect(state => state, mapDispatchToProps)(Home)

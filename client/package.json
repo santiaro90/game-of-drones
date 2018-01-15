@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "author": "Santiago Alvarez Rodriguez <santiaro90@gmail.com>",
   "dependencies": {
+    "axios": "^0.17.1",
     "react": "^16.2.0",
     "react-dom": "^16.2.0",
     "react-redux": "^5.0.6",

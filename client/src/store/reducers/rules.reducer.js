@@ -1,8 +1,12 @@
 // @flow
-type Shape = 'rock' | 'paper' | 'scissors'
+import {
+  actionTypes as rulesActionTypes,
+  type RulesAction
+} from '../actions/rules.actions'
+
 export type ShapeRule = {
-  kind: Shape,
-  beats: Shape
+  kind: string,
+  beats: string
 }
 
 export type RulesState = {
@@ -11,12 +15,18 @@ export type RulesState = {
 }
 
 const initialState: RulesState = {
-  roundsToWin: 3,
-  shapes: [
-    { kind: 'rock', beats: 'scissors' },
-    { kind: 'paper', beats: 'rock' },
-    { kind: 'scissors', beats: 'paper' }
-  ]
+  roundsToWin: 0,
+  shapes: []
 }
 
-export default (state: RulesState = initialState, action: *): RulesState => state
+export default (state: RulesState = initialState, action: RulesAction): RulesState => {
+  switch (action.type) {
+    case rulesActionTypes.RULES_LOAD_SUCCESS: {
+      const { roundsToWin, shapeRules } = action.payload
+      return { roundsToWin, shapes: shapeRules }
+    }
+
+    default:
+      return state
+  }
+}
