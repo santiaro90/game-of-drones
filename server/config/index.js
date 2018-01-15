@@ -11,6 +11,11 @@ if (!config.IS_PROD) {
 }
 
 module.exports = Object.assign(config, {
+  db: {
+    PORT: process.env.MONGODB_PORT,
+    URL: process.env.MONGODB_URL,
+    NAME: process.env.MONGODB_NAME
+  },
   cors: {
     ALLOW_ORIGIN: process.env.ALLOW_ORIGIN
   },
