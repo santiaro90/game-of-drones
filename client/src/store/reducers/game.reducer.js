@@ -31,7 +31,7 @@ const initialState: Game = {
 export default (state: Game = initialState, action: GameAction | RoundAction): Game => {
   switch (action.type) {
     case gameActionTypes.GAME_INIT: {
-      const players: Player[] = action.payload.players
+      const players: PlayerPayload[] = action.payload.players
 
       return {
         started: true,
@@ -42,6 +42,10 @@ export default (state: Game = initialState, action: GameAction | RoundAction): G
           next: players[1]
         }
       }
+    }
+
+    case gameActionTypes.GAME_RESET: {
+      return { ...initialState }
     }
 
     case roundActionTypes.ROUND_SELECT_SHAPE: {

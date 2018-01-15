@@ -2,8 +2,19 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import { Button, Container, Header } from 'semantic-ui-react'
+import { connect } from 'react-redux'
 
-class Home extends Component<{}> {
+import { resetGame } from '../store/actions/game.actions'
+
+type HomeProps = {
+  resetGame: () => void
+}
+
+class Home extends Component<HomeProps> {
+  componentWillMount() {
+    this.props.resetGame()
+  }
+
   render() {
     return (
       <Container textAlign="center">
@@ -34,4 +45,8 @@ class Home extends Component<{}> {
   }
 }
 
-export default Home
+const mapDispatchToProps = (dispatch: Function) => ({
+  resetGame: () => dispatch(resetGame())
+})
+
+export default connect(state => state, mapDispatchToProps)(Home)
