@@ -1,4 +1,5 @@
 const express = require('express')
+const path = require('path')
 
 const config = require('./config')
 const middleware = require('./middleware')
@@ -16,8 +17,12 @@ const run = async () => {
 
   middleware.init(app)
 
-  app.use('/ping', (req, res) => res.status(200).json({ message: 'pong' }))  // just to test if server's up
   app.use(api)
+
+  const APP_PATH = path.resolve(__dirname, '../', 'client/build')
+  app.use('/', express.static(APP_PATH))
+  app.get('*', (req, res) => res.sendFile(`${APP_PATH}/index.html`))
+
   app.listen(config.server.PORT, () => console.log(`Started listening on port ${config.server.PORT}`))
 }
 
